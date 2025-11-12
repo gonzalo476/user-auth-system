@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtCore
 
 
 class MainWindow(QtWidgets.QWidget):
@@ -6,26 +6,29 @@ class MainWindow(QtWidgets.QWidget):
     def __init__(self):
         super(MainWindow, self).__init__(parent=None)
 
-        # crear un layout
+        # create layout
         self.setWindowTitle("Main Window")
         self.setMinimumSize(400, 300)
 
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)
 
-        # red
-        red = QtWidgets.QLabel("Red")
-        red.setStyleSheet("background-color: red; padding: 20px;")
+        # sign in label
+        signin_label = QtWidgets.QLabel("Sign In")
 
-        # green
-        green = QtWidgets.QLabel("Green")
-        green.setStyleSheet("background-color: green; padding: 20px;")
+        # username QLine edit
+        username_edit = QtWidgets.QLineEdit(placeholderText="Username")
 
-        # blue
-        blue = QtWidgets.QLabel("Blue")
-        blue.setStyleSheet("background-color: blue; padding: 20px;")
+        # password QLine edit
+        password_edit = QtWidgets.QLineEdit(placeholderText="Password")
 
-        # add colors to layout
-        layout.addWidget(red)
-        layout.addWidget(green)
-        layout.addWidget(blue)
+        # submit btn
+        login_btn = QtWidgets.QPushButton("LogIn")
+        login_btn.setMaximumWidth(75)
+
+        # add widgets to layout
+        layout.setContentsMargins(50, 50, 50, 50)
+        layout.addWidget(signin_label)
+        layout.addWidget(username_edit)
+        layout.addWidget(password_edit)
+        layout.addWidget(login_btn, alignment=QtCore.Qt.AlignmentFlag.AlignCenter)
