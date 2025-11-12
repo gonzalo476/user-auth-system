@@ -53,13 +53,15 @@ class LoginWindow(QtWidgets.QWidget):
 
         # add widgets to main layout
         main_layout.setContentsMargins(50, 50, 50, 50)
+        main_layout.setSpacing(10)
+
         main_layout.addWidget(
             self.signin_label, alignment=QtCore.Qt.AlignmentFlag.AlignHCenter
         )
-        main_layout.addSpacing(30)
+        main_layout.addSpacing(20)
         main_layout.addWidget(self.username_edit)
         main_layout.addWidget(self.password_edit)
-        main_layout.addSpacing(30)
+        main_layout.addSpacing(20)
         main_layout.addWidget(self.login_btn)
 
         register_layout.addStretch()
