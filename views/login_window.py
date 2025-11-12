@@ -72,11 +72,12 @@ class LoginWindow(QtWidgets.QWidget):
         main_layout.addLayout(register_layout)
 
     def handle_login(self):
-        """Open main window"""
+        """open main window"""
         username = self.username_edit.text()
         password = self.password_edit.text()
+        auth = AuthController()
 
-        success = self.auth_controller.login(username, password)
+        success = auth.login(username=username, password=password)
 
         if success:
             print("Wellcome {0}!".format(username))
@@ -84,10 +85,10 @@ class LoginWindow(QtWidgets.QWidget):
             self.main_window.show()
             self.close()
         else:
-            print("invalid User!".format(username))
+            print("invalid User!")
 
     def handle_register(self):
-        """Open register window"""
+        """open register window"""
         self.register_window = RegisterWindow()
         self.register_window.show()
         self.hide()

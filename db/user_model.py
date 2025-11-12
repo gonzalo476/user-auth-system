@@ -41,7 +41,7 @@ class User:
 
     def get_user(self, username):
         try:
-            self.cursor.execute("SELECT * FROM users WHERE username = ?", (username))
+            self.cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
             return self.cursor.fetchone()
         except sqlite3.IntegrityError:
             print("El usuario no existe!")
@@ -51,14 +51,17 @@ class User:
             return False
 
     def verify_user(self, username, password):
-        self.cursor.execute("SELECT password FROM users WHERE username = ?", (username))
+        self.cursor.execute(
+            "SELECT password FROM users WHERE username = ?", (username,)
+        )
         row = self.cursor.fetchone()
         if not row:
             return False
 
         stored_hash = row[0]
-        return bcrypt.checkpw(password.encode("utf-8"), stored_hash)
+        match = bcrypt.checkpw(password.encode("utf-8"), stored_hash)
+
+        return match
 
     def __del__(self):
         self.conn.close()
-        print("Se cerró la conexion con la base de datos.")

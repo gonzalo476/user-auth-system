@@ -4,10 +4,9 @@ from db.user_model import User
 class AuthController:
 
     def login(self, username, password):
-
-        if username and password:
-            return True
-        return False
+        user_model = User()
+        result = user_model.verify_user(username=username, password=password)
+        return result
 
     def register(self, username, email, department, password):
         user_model = User()
