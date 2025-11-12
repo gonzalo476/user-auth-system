@@ -13,14 +13,17 @@ class MainWindow(QtWidgets.QWidget):
         layout = QtWidgets.QVBoxLayout()
         self.setLayout(layout)
 
-        # sign in label
+        # signin label
         signin_label = QtWidgets.QLabel("Sign In")
 
         # username QLine edit
         username_edit = QtWidgets.QLineEdit(placeholderText="Username")
+        username_edit.setMinimumHeight(30)
 
         # password QLine edit
         password_edit = QtWidgets.QLineEdit(placeholderText="Password")
+        password_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+        password_edit.setMinimumHeight(30)
 
         # submit btn
         login_btn = QtWidgets.QPushButton("LogIn")
