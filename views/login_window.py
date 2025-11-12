@@ -2,8 +2,10 @@ from PySide6 import QtWidgets, QtCore
 
 from controllers.auth_controller import AuthController
 from .main_window import MainWindow
+from .register_window import RegisterWindow
 
 from config.colors import AppleColors
+from components.button import Button
 
 
 class LoginWindow(QtWidgets.QWidget):
@@ -16,13 +18,17 @@ class LoginWindow(QtWidgets.QWidget):
 
         # create layout
         self.setWindowTitle("Sign In")
-        self.setMinimumSize(400, 300)
+        self.setFixedSize(400, 300)
 
-        layout = QtWidgets.QVBoxLayout()
-        self.setLayout(layout)
+        main_layout = QtWidgets.QVBoxLayout()
+        register_layout = QtWidgets.QHBoxLayout()
+        self.setLayout(main_layout)
 
         # signin label
-        self.signin_label = QtWidgets.QLabel("Sign In")
+        self.signin_label = QtWidgets.QLabel("Sign in to Account")
+        self.signin_label.setStyleSheet(
+            f"QLabel {{ font-size: 18px; font-weight: bold; }}"
+        )
 
         # username QLine edit
         self.username_edit = QtWidgets.QLineEdit(placeholderText="Username")
@@ -34,39 +40,37 @@ class LoginWindow(QtWidgets.QWidget):
         self.password_edit.setMinimumHeight(30)
 
         # submit btn
-        self.login_btn = QtWidgets.QPushButton("LogIn")
-        self.login_btn.setStyleSheet(
-            f"""
-                QPushButton {{
-                    background-color: {AppleColors.BLUE};
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    padding: 10px 20px;
-                    font-size: 14px;
-                }}
-                QPushButton:hover {{
-                    background-color: #0051D5;
-                }}
-                QPushButton:pressed {{
-                    background-color: #004BB8;
-                }}
-            """
-        )
+        self.login_btn = Button(text="Sign In")
+
+        # register btn
+        self.register_txt = QtWidgets.QLabel("Don't have an account?")
+        self.register_txt.setStyleSheet(f"QLabel {{ color: {AppleColors.GRAY}; }}")
+        self.register_btn = Button(text="Register", type="text")
 
         # connects
         self.login_btn.clicked.connect(self.handle_login)
+        self.register_btn.clicked.connect(self.handle_register)
 
-        # add widgets to layout
-        layout.setContentsMargins(50, 50, 50, 50)
-        layout.addWidget(self.signin_label)
-        layout.addWidget(self.username_edit)
-        layout.addWidget(self.password_edit)
-        layout.addSpacing(30)
-        layout.addWidget(self.login_btn)
+        # add widgets to main layout
+        main_layout.setContentsMargins(50, 50, 50, 50)
+        main_layout.addWidget(
+            self.signin_label, alignment=QtCore.Qt.AlignmentFlag.AlignHCenter
+        )
+        main_layout.addSpacing(30)
+        main_layout.addWidget(self.username_edit)
+        main_layout.addWidget(self.password_edit)
+        main_layout.addSpacing(30)
+        main_layout.addWidget(self.login_btn)
+
+        register_layout.addStretch()
+        register_layout.addWidget(self.register_txt)
+        register_layout.addWidget(self.register_btn)
+        register_layout.addStretch()
+
+        main_layout.addLayout(register_layout)
 
     def handle_login(self):
-        """User auth on clicked"""
+        """Open main window"""
         username = self.username_edit.text()
         password = self.password_edit.text()
 
@@ -79,3 +83,9 @@ class LoginWindow(QtWidgets.QWidget):
             self.close()
         else:
             print("invalid User!".format(username))
+
+    def handle_register(self):
+        """Open register window"""
+        self.register_window = RegisterWindow()
+        self.register_window.show()
+        self.hide()
