@@ -1,6 +1,9 @@
+import re
+
 from PySide6 import QtWidgets, QtCore
 
 from components.button import Button
+from components.dialog import InfoMessage, SuccessMessage
 from controllers.auth_controller import AuthController
 
 studio_depts = [
@@ -91,12 +94,56 @@ class RegisterWindow(QtWidgets.QWidget):
         self.close()
 
     def handle_register_user(self):
+        from .login_window import LoginWindow
+
+        self.login_window = LoginWindow()
+
         username = self.username_edit.text()
         email = self.email_edit.text()
         deparment = self.dept_combo.currentText()
         password = self.password_edit.text()
 
         auth = AuthController()
-        result = auth.register(username, email, deparment, password)
+        pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
-        print(result)
+        # validate username
+        if not username:
+            InfoMessage(msg="Username required!").exec()
+            self.username_edit.setFocus()
+            return
+
+        # validate email
+        if not email:
+            InfoMessage(msg="Email required!").exec()
+            self.email_edit.setFocus()
+            return
+
+        if len(email) > 254:
+            InfoMessage(msg="Email to large!").exec()
+            self.email_edit.setFocus()
+            return
+
+        if not re.match(pattern, email):
+            InfoMessage(msg="Invalid email format!").exec()
+            self.email_edit.setFocus()
+            return
+
+        # validate department
+        if not deparment:
+            InfoMessage(msg="Department not selected").exec()
+            self.dept_combo.setFocus()
+            return
+
+        if not password:
+            InfoMessage(msg="Password required!").exec()
+            self.password_edit.setFocus()
+            return
+
+        result, msg = auth.register(username, email, deparment, password)
+
+        if result:
+            SuccessMessage(msg="Account registered successfully!").exec()
+            self.login_window.show()
+            self.close()
+        else:
+            InfoMessage(msg=msg).exec()

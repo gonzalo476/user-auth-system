@@ -31,24 +31,20 @@ class User:
                 (username, hashed_pass, department, email),
             )
             self.conn.commit()
-            return True
+            return True, "Account created successfully"
         except sqlite3.IntegrityError:
-            print("User already exists!")
-            return False
+            return False, "Account already exists!"
         except sqlite3.Error as e:
-            print(f"Error en la base de datos: {e}")
-            return False
+            return False, f"Database error: {e}"
 
     def get_user(self, username):
         try:
             self.cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
             return self.cursor.fetchone()
         except sqlite3.IntegrityError:
-            print("El usuario no existe!")
-            return False
+            return False, "Account does not exist!"
         except sqlite3.Error as e:
-            print(f"Error en la base de datos: {e}")
-            return False
+            return False, f"Database error: {e}"
 
     def verify_user(self, username, password):
         self.cursor.execute(
