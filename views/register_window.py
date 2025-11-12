@@ -58,7 +58,9 @@ class RegisterWindow(QtWidgets.QWidget):
 
         # buttons
         self.register_btn = Button(text="Register")
-        self.login_btn = Button(text="Return to login", type="text")
+        self.login_btn = Button(
+            text="Return to login", type="text", variant="secondary"
+        )
 
         # add widgets to layout
         layout.setContentsMargins(50, 50, 50, 50)

@@ -3,6 +3,7 @@ from PySide6 import QtWidgets, QtCore
 from controllers.auth_controller import AuthController
 from .main_window import MainWindow
 from .register_window import RegisterWindow
+from components.dialog import WarningMessage
 
 from config.colors import AppleColors
 from components.button import Button
@@ -85,7 +86,7 @@ class LoginWindow(QtWidgets.QWidget):
             self.main_window.show()
             self.close()
         else:
-            print("invalid User!")
+            WarningMessage(msg="Invalid user or password").exec()
 
     def handle_register(self):
         """open register window"""
