@@ -1,7 +1,6 @@
 from PySide6 import QtWidgets
 
-from controllers.auth_controller import AuthController
-from db.database import User
+from models.user import User
 
 
 class MainWindow(QtWidgets.QWidget):

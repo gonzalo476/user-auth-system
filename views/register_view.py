@@ -87,14 +87,14 @@ class RegisterWindow(QtWidgets.QWidget):
         self.register_btn.clicked.connect(self.handle_register_user)
 
     def handle_open_login(self):
-        from .login_window import LoginWindow
+        from .login_view import LoginWindow
 
         self.login_window = LoginWindow()
         self.login_window.show()
         self.close()
 
     def handle_register_user(self):
-        from .login_window import LoginWindow
+        from .login_view import LoginWindow
 
         self.login_window = LoginWindow()
 
@@ -104,46 +104,12 @@ class RegisterWindow(QtWidgets.QWidget):
         password = self.password_edit.text()
 
         auth = AuthController()
-        pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
-        # validate username
-        if not username:
-            InfoMessage(msg="Username required!").exec()
-            self.username_edit.setFocus()
-            return
+        register_result = auth.register(username, email, deparment, password)
 
-        # validate email
-        if not email:
-            InfoMessage(msg="Email required!").exec()
-            self.email_edit.setFocus()
-            return
-
-        if len(email) > 254:
-            InfoMessage(msg="Email to large!").exec()
-            self.email_edit.setFocus()
-            return
-
-        if not re.match(pattern, email):
-            InfoMessage(msg="Invalid email format!").exec()
-            self.email_edit.setFocus()
-            return
-
-        # validate department
-        if not deparment:
-            InfoMessage(msg="Department not selected").exec()
-            self.dept_combo.setFocus()
-            return
-
-        if not password:
-            InfoMessage(msg="Password required!").exec()
-            self.password_edit.setFocus()
-            return
-
-        result, msg, usr = auth.register(username, email, deparment, password)
-
-        if result:
-            SuccessMessage(msg="Account registered successfully!").exec()
+        if register_result.success:
+            SuccessMessage(msg=register_result.message).exec()
             self.login_window.show()
             self.close()
         else:
-            InfoMessage(msg=msg).exec()
+            InfoMessage(msg=register_result.message).exec()
