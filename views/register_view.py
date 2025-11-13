@@ -5,6 +5,8 @@ from PySide6 import QtWidgets, QtCore
 from components.button import Button
 from components.dialog import InfoMessage, SuccessMessage
 from controllers.auth_controller import AuthController
+from config.colors import AppleColors
+from helpers.ui import clear_qline_widget_messages
 
 studio_depts = [
     "Production",
@@ -37,30 +39,36 @@ class RegisterWindow(QtWidgets.QWidget):
 
         # label
         self.register_label = QtWidgets.QLabel("Register account")
+        self.register_label.setObjectName("register_label")
         self.register_label.setStyleSheet(
             f"QLabel {{ font-size: 18px; font-weight: bold; }}"
         )
 
         # username edit
         self.username_edit = QtWidgets.QLineEdit(placeholderText="Username")
+        self.username_edit.setObjectName("username")
         self.username_edit.setMinimumHeight(30)
 
         # email edit
         self.email_edit = QtWidgets.QLineEdit(placeholderText="Email")
+        self.email_edit.setObjectName("email")
         self.email_edit.setMinimumHeight(30)
 
         # dept combobox
         self.dept_combo = QtWidgets.QComboBox()
+        self.dept_combo.setObjectName("department")
         self.dept_combo.addItems(studio_depts)
         self.dept_combo.setMinimumHeight(30)
 
         # password edit
         self.password_edit = QtWidgets.QLineEdit(placeholderText="Password")
+        self.password_edit.setObjectName("password")
         self.password_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
         self.password_edit.setMinimumHeight(30)
 
         # buttons
         self.register_btn = Button(text="Register")
+        self.register_btn.setObjectName("register_btn")
         self.login_btn = Button(
             text="Return to login", type="text", variant="secondary"
         )
@@ -94,22 +102,32 @@ class RegisterWindow(QtWidgets.QWidget):
         self.close()
 
     def handle_register_user(self):
-        from .login_view import LoginWindow
-
-        self.login_window = LoginWindow()
 
         username = self.username_edit.text()
         email = self.email_edit.text()
         deparment = self.dept_combo.currentText()
         password = self.password_edit.text()
 
+        clear_qline_widget_messages(self)
+
         auth = AuthController()
 
         register_result = auth.register(username, email, deparment, password)
+        focus_widget = self.findChild(QtWidgets.QLineEdit, register_result.data)
 
         if register_result.success:
+            from .login_view import LoginWindow
+
+            self.login_window = LoginWindow()
+
             SuccessMessage(msg=register_result.message).exec()
             self.login_window.show()
             self.close()
         else:
+            if focus_widget:
+                focus_widget.setFocus()
+                focus_widget.setStyleSheet(
+                    f"border: 1px solid {AppleColors.ERROR}; border-radius: 5px;"
+                )
+
             InfoMessage(msg=register_result.message).exec()
