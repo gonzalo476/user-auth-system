@@ -78,11 +78,11 @@ class LoginWindow(QtWidgets.QWidget):
         password = self.password_edit.text()
         auth = AuthController()
 
-        success = auth.login(username=username, password=password)
+        login_res = auth.login(username=username, password=password)
 
-        if success:
-            print("Wellcome {0}!".format(username))
-            self.main_window = MainWindow(username)
+        if login_res:
+            res, msg, user = auth.get_user(username)
+            self.main_window = MainWindow(user)
             self.main_window.show()
             self.close()
         else:

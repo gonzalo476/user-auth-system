@@ -139,7 +139,7 @@ class RegisterWindow(QtWidgets.QWidget):
             self.password_edit.setFocus()
             return
 
-        result, msg = auth.register(username, email, deparment, password)
+        result, msg, usr = auth.register(username, email, deparment, password)
 
         if result:
             SuccessMessage(msg="Account registered successfully!").exec()
