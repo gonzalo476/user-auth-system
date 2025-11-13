@@ -1,6 +1,7 @@
 import re
 
 from models.database import Database, Result
+from models.user import User
 
 
 class AuthController:
@@ -39,9 +40,11 @@ class AuthController:
         if not password:
             return Result(False, "Password required!", "password")
 
-        result = self.db.create_user(
+        user = User(
             username=username, email=email, department=department, password=password
         )
+
+        result = self.db.create_user(user)
 
         return result
 
